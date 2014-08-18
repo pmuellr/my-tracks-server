@@ -1,0 +1,29 @@
+{
+  "name":               "my-tracks-server",
+  "description":        "gps tracks server",
+  "main":               "./lib/my-tracks-server",
+  "bin": {
+    "my-tracks-server": "bin/my-tracks-server.js"
+  },
+  "version":            "1.0.0",
+  "author":             "pmuellr",
+  "license":            "Apache-2.0",
+  "homepage":           "https://github.com/pmuellr/my-tracks-server",
+  "repository": {
+    "type":             "git",
+    "url":              "https://github.com/pmuellr/my-tracks-server.git"
+  },
+  "dependencies": {
+    "cfenv":            "0.2.x",
+    "flickrapi":        "0.3.x",
+    "hapi":             "6.5.x",
+    "mkdirp":           "0.5.x",
+    "nopt":             "3.0.x",
+    "ports":            "1.1.x",
+    "rimraf":           "2.2.x",
+    "q":                "1.0.x",
+    "underscore":       "1.6.x"
+  },
+  "devDependencies": {
+  }
+}

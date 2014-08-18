@@ -1,0 +1,179 @@
+<!-- Licensed under the Apache License. See footer for details. -->
+
+<!-- ======================================================================= -->
+
+<div class="panel panel-info">
+  <div class="panel-heading"><strong>getting help</strong></div>
+  <div class="panel-body">
+    <p>You can post questions on the BlueMix Developers Community forum, here:
+
+    <p><a href="https://www.ibmdw.net/answers/?community=bluemix">https://www.ibmdw.net/answers/?community=bluemix</a>
+
+    <p>If your question is
+    specific to node.js, please add a tag (below the editor) of <b>"node.js"</b>.
+  </div>
+</div>
+
+
+
+<!-- ======================================================================= -->
+
+<div class="panel panel-info">
+  <div class="panel-heading"><strong>installing pre-reqs</strong></div>
+  <div class="panel-body">
+    <p>To use node.js on BlueMix, you will need to do the following items:
+
+    <ul>
+
+        <li><p>register for BlueMix
+
+          <p>To get access to BlueMix, you'll have to sign up with an IBM id.  If you don't
+          already have an IBM id, you will be prompted to create one during registration.
+
+          <p>Start here -
+          <a href="https://ace.ng.bluemix.net/">https://ace.ng.bluemix.net/</a>
+          - click the "LOGIN" link at the top.
+          You can create an IBM id on this page, or if you already have one, just use
+          the "Sign in" form.
+
+          <p>Creating an IBM id should take just a few minutes.
+
+        <li><p>install node.js on your development machine
+
+          <p>You can install the community build of node.js here:
+
+          <p><a href="http://nodejs.org/download/">http://nodejs.org/download/</a>
+
+          <p>You can alternatively install the IBM SDK for Node.js, here:
+          <p><a href="http://www.ibm.com/developerworks/web/nodesdk/">http://www.ibm.com/developerworks/web/nodesdk/</a>
+
+        <li><p>install the Cloud Foundry <code>cf</code> command-line tool
+
+          <p>The <code>cf</code> command-line tool is used to manage your applications running
+          on BlueMix.  Information about installing and using <code>cf</code> is available here:
+          <p><a href="http://docs.cloudfoundry.org/devguide/installcf/">http://docs.cloudfoundry.org/devguide/installcf/</a>
+  </div>
+</div>
+
+<!-- ======================================================================= -->
+
+<div class="panel panel-info">
+  <div class="panel-heading"><strong>hello world for node.js on BlueMix</strong></div>
+  <div class="panel-body">
+    <p><a href="https://hub.jazz.net/project/pmuellr/bluemix-hello-node/overview">https://hub.jazz.net/project/pmuellr/bluemix-hello-node/overview</a>
+
+    <p>This is a small project that implements a web server that you can deploy on
+    BlueMix; it’s about as small as you can get, and so, of course, doesn’t do much.
+    It displays “Hello World” on every single one of it’s pages.
+
+    <p>So, not useful by itself, but it's heavily documented, so you
+    can at least see the nuts and bolts of deploying a node.js web server on BlueMix.
+
+    <p>The README.md file, which is displayed on that overview page, contains the
+    directions on how to build and deploy this application.
+
+  </div>
+</div>
+
+
+<!-- ======================================================================= -->
+
+<div class="panel panel-info">
+  <div class="panel-heading"><strong>using the <code>cf-env</code> package to parse VCAP_SERVICES</strong></div>
+  <div class="panel-body">
+    <p><a href="https://www.ibmdw.net/bluemix/2014/03/12/cf-env-package-node-js/">https://www.ibmdw.net/bluemix/2014/03/12/cf-env-package-node-js/</a>
+
+    <p>Blog post describing the <code>cf-env</code> package
+    <a href="https://www.npmjs.org/package/cf-env">available on npm</a>,
+    which will handle your <code>VCAP_*</code> environment variable parsing duties.
+  </div>
+</div>
+
+
+
+<!-- ======================================================================= -->
+
+<div class="panel panel-info">
+  <div class="panel-heading"><strong>errors during <code>npm rebuild</code> for native modules</strong></div>
+  <div class="panel-body">
+    <p>We are seeing errors building some native modules during staging.
+
+    <p>If you see the following error in your console during a <code>cf push</code>:
+
+    <pre>
+      npm ERR! [some module]@[some version] install: <code>node-gyp rebuild</code>
+    </pre>
+
+    <p>you can work around this by using an older version of node 0.10.x.  You can
+    specify a version with the <code>engines</code> property in your <code>package.json</code> file, as
+    follows:
+
+    <pre>
+      {
+          "name":             "my-app-name",
+          "engines" :         { "node" : "=0.10.15" },
+          "dependencies":
+          ...
+      }
+    </pre>
+
+    <p>Specifically, this problem can occur with node versions > 0.10.15, and is
+    expected to be resoved in node version 0.10.27.
+
+    <p>Also see the
+    <a href="http://support.run.pivotal.io/entries/45576443-NodeJS-App-Push-Failing">same issue on Pivotal's support page</a>.
+
+    <hr>
+
+    <h4><span class="label label-danger">2014-04-16</span></h4>
+
+    You can also use a
+    <a href="http://nodebp.ng.bluemix.net/">temporary buildpack</a>
+    that fixes the problem for node version 0.10.26 only.
+    See below for more documentation on alternate node buildpacks.
+  </div>
+</div>
+
+<!-- ======================================================================= -->
+
+<div class="panel panel-info">
+  <div class="panel-heading"><strong>using an alternate node buildpack</strong></div>
+  <div class="panel-body">
+
+    <p>By default, BlueMix will use the <a href="/ibm-node">IBM SDK for node</a> as the node.js
+    runtime for the application running in the cloud.  If you'd like to use an
+    alternate buildpack, to use an alternate runtime, we suggest you use the
+    open source Cloud Foundry node buildpack, at:
+
+    <p><a href="https://github.com/cloudfoundry/heroku-buildpack-nodejs">https://github.com/cloudfoundry/heroku-buildpack-nodejs</a>
+
+    <p>To use this buildpack, you can invoke push your application with the <code>-b</code> option:
+
+    <pre>
+      cf push -b https://github.com/cloudfoundry/heroku-buildpack-nodejs.git
+    </pre>
+
+    <p>or
+
+    <a href="http://docs.cloudfoundry.org/devguide/deploy-apps/manifest.html">add a <code>buildpack</code> entry to your manifest.yml file</a>.
+  </div>
+</div>
+
+
+<!--
+#===============================================================================
+# Copyright IBM Corp. 2014
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#===============================================================================
+-->

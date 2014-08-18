@@ -1,0 +1,54 @@
+%PROGRAM% - %DESCRIPTION%
+
+This program is an HTTP server which provides a web application displaying
+GPS tracks and associated goodies.
+
+usage:
+
+    %PROGRAM% [options] git-url
+
+where
+
+    git-url - is the url of the git repo containing the track data
+
+options:
+
+    -g --git-webhook <secret>  secret for a git webhook
+    -f --flickr <api-key>      Flickr API key
+    -p --port <number>         http port to run on
+    -v --verbose
+    -h --help
+
+The git webhook secret is a string which is used with the server's
+`/api/webhooks/git` endpoint, to trigger a rebuild of the server data based
+on a git push.  The secret is used to validate the `X-Hub-Signature`
+header, per the [github webooks documentation][].  Webhooks can be configured
+at your GitHub project's "Settings" page.  The only webhook event that
+triggers a rebuild is the `push` event.
+
+The [flickr api key] is a key obtained from flickr, which allows the application
+to perform APIs against flickr.
+
+You can also set the git-webhook secret and flickr key via environment variable
+or Cloud Foundry [user-provided service][].  The service names are matched via
+regular expression (first match wins, so ... indeterminate if multiple), and
+expect a particular credential property name in the service.  Values are:
+
+    option             env var        service name regex    credential name
+    -------------      -------        ------------------    ---------------
+    --flickr           FLICKR         /.*flickr.*/          api-key
+    --git-webhook      GITWEBHOOK     /.*git-webhook.*/     secret
+
+For instance, to set the flickr api key to "ABCD", you can either set the
+environment variable `FLICKR` to `ABCD`, or create a user-provided service via
+
+    cf cups flickr -p api-key
+
+This will prompt you for the api key, and then create a service named `flickr`,
+which you can bind to your app.
+
+Command line options override environment variable settings override
+user-provided services.
+
+homepage: %HOMEPAGE%
+version:  %VERSION%
