@@ -15,8 +15,10 @@
   },
   "dependencies": {
     "cfenv":            "0.2.x",
+    "d3":               "3.4.x",
     "flickrapi":        "0.3.x",
     "hapi":             "6.5.x",
+    "gpx-parse":        "0.6.x",
     "mkdirp":           "0.5.x",
     "nopt":             "3.0.x",
     "ports":            "1.1.x",

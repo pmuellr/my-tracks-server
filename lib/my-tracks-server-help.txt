@@ -37,7 +37,7 @@ expect a particular credential property name in the service.  Values are:
     option             env var        service name regex    credential name
     -------------      -------        ------------------    ---------------
     --flickr           FLICKR         /.*flickr.*/          api-key
-    --git-webhook      GITWEBHOOK     /.*git-webhook.*/     secret
+    --git-webhook      GIT_WEBHOOK    /.*git-webhook.*/     secret
 
 For instance, to set the flickr api key to "ABCD", you can either set the
 environment variable `FLICKR` to `ABCD`, or create a user-provided service via
