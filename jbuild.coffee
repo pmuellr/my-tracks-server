@@ -22,7 +22,9 @@ tasks = defineTasks exports,
   build: "build the server"
   test:  "run tests"
 
-WatchSpec = "lib lib/**/* tests tests/**/*"
+WatchSpec = "lib lib/**/*"
+
+rebuildTouch = "#{__dirname}/../gps-tracks/tmp/rebuild"
 
 #-------------------------------------------------------------------------------
 mkdir "-p", "tmp"
@@ -48,6 +50,8 @@ tasks.build = ->
   rm "-Rf", "www/lib"
   rm "-Rf", "www/views"
 
+  "".to rebuildTouch if test "-f", rebuildTouch
+
   # gzipize "www"
 
 #-------------------------------------------------------------------------------
@@ -70,30 +74,9 @@ tasks.serve = ->
   server.start "tmp/server.pid", "node", command
 
 #-------------------------------------------------------------------------------
-tasks.test = ->
-  log "running tests"
-
-  tests = "tests/test-*.coffee"
-
-  options =
-    ui:         "bdd"
-    reporter:   "spec"
-    slow:       300
-    compilers:  "coffee:coffee-script"
-    require:    "coffee-script/register"
-
-  options = for key, val of options
-    "--#{key} #{val}"
-
-  options = options.join " "
-
-  mocha "#{options} #{tests}", silent:true, (code, output) ->
-    console.log "test results:\n#{output}"
-
-#-------------------------------------------------------------------------------
 watchIter = ->
   tasks.build()
-  tasks.serve()
+  # tasks.serve()
   # tasks.test()
 
 #-------------------------------------------------------------------------------

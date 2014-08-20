@@ -3,13 +3,25 @@
 This program is an HTTP server which provides a web application displaying
 GPS tracks and associated goodies.
 
-usage:
+usage
+---------------------------------------
 
-    %PROGRAM% [options] git-url
+    %PROGRAM% [options] (git-url || dir-name)
 
 where
 
-    git-url - is the url of the git repo containing the track data
+    git-url  - is the url of the git repo containing the track data
+    dir-name - a directory containing the track data
+
+When `dir-name` is specified, the specified directory name should be a git
+repo, where the top-level `my-tracks` directory will be used to write resources
+used by the server.  Use this command to update your git repo before pushing
+it back to your publicly available git repo.  A local server will be started,
+serving this data, so you can test it before pushing.
+
+When `git-url` is specified, the git repo will be cloned/pulled into the
+current directory's `my-tracks-repo` directory, and server will be started,
+serving that directory's `my-tracks` resources.
 
 options:
 
@@ -49,6 +61,36 @@ which you can bind to your app.
 
 Command line options override environment variable settings override
 user-provided services.
+
+
+typical workflow
+---------------------------------------
+
+one-time setup
+-------------------
+
+* create a flickr account
+* create a public git repo to house your tracks
+* if on GitHub, setup a ``push` Webhook - https://developer.github.com/webhooks/
+* clone that repo to your local machine
+* arrange to run this app with the `git-url` parameter, on the cloud
+
+per-track workflow
+-------------------
+
+* synchronize your camera and gps times
+* start gps tracking
+* take pictures
+* stop gps tracking
+* upload pictures to flickr
+* copy the `<trip>.gpx` track file to your tracks repo clone
+* run `my-tracks-server <directory>` to update the repo's `build` directory
+* test local server, make sure it's ok
+* commit changes - `<trip>.gpx` file and `build` directory files
+
+
+about
+---------------------------------------
 
 homepage: %HOMEPAGE%
 version:  %VERSION%
