@@ -7,7 +7,13 @@
 #    windows:        npm -g install jbuild
 #-------------------------------------------------------------------------------
 
+fs   = require "fs"
+path = require "path"
+zlib = require "zlib"
+
 GIT_REPO = "https://github.com/pmuellr/gps-tracks.git"
+
+cat_source_map = global["cat-source-map"]
 
 #-------------------------------------------------------------------------------
 tasks = defineTasks exports,
@@ -30,9 +36,19 @@ tasks.build = ->
 
   cleanDir "www"
 
-  copyBowerFiles("www/bower")
-
   cp "-R", "www-src/*", "www"
+
+  copyBowerFiles "www/bower"
+
+  buildViews "www-src/views", "www/lib/views.json"
+
+  browserify "www/lib/main.js --outfile tmp/node-modules.js --debug"
+  cat_source_map "--fixFileNames tmp/node-modules.js www/node-modules.js"
+
+  rm "-Rf", "www/lib"
+  rm "-Rf", "www/views"
+
+  # gzipize "www"
 
 #-------------------------------------------------------------------------------
 tasks.watch = ->
@@ -104,6 +120,44 @@ copyBowerFiles = (dir) ->
       mkdir "-p", dst
 
       cp "-R", src, dst
+
+#-------------------------------------------------------------------------------
+gzipize = (dir) ->
+  files = ls "-R", dir
+
+  exts = "html css js json svg".split(" ")
+  compressable = {}
+  for ext in exts
+    compressable[ext] = true
+
+  for file in files
+    ext = file.split(".").pop()
+    if compressable[ext]
+      gzipFile path.join(dir, file)
+
+#-------------------------------------------------------------------------------
+gzipFile = (iFile) ->
+  oFile = "#{iFile}.gz"
+
+  gzip = zlib.createGzip()
+
+  iStream = fs.createReadStream(iFile)
+  oStream = fs.createWriteStream(oFile)
+
+  iStream.pipe(gzip).pipe(oStream)
+
+#-------------------------------------------------------------------------------
+buildViews = (srcDir, outFile) ->
+  files = ls srcDir
+  data  = {}
+
+  for file in files
+    contents   = cat path.join(srcDir, file)
+    contents   = contents.replace(/<!--[\s\S]*?-->/g, "")   # remove comments
+    contents   = contents.trim()
+    data[file] = contents
+
+  data = JSON.stringify(data, null, 4).to outFile
 
 #-------------------------------------------------------------------------------
 cleanDir = (dir) ->

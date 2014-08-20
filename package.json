@@ -27,5 +27,7 @@
     "underscore":       "1.6.x"
   },
   "devDependencies": {
+    "browserify":       "5.10.x",
+    "cat-source-map":   "0.1.x"
   }
 }
